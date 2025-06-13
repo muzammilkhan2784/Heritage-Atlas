@@ -30,9 +30,13 @@ After downloading the dataset, we cleansed it by removing unnecessary columns an
 Since the dataset did not include any images, we used a Python script to automatically fetch the actual image files from Wikipedia using the site names. The script queried the Wikipedia API to obtain the primary image for each site, then downloaded the image content and saved it locally using the site's site_id as the filename. These images were stored in a dedicated folder, ready to be uploaded into MongoDB using GridFS.
 
 We then used another Python script to:
+
 Upload the images to MongoDB using GridFS
+
 Link each site document to its corresponding image via image_id
+
 Convert latitude and longitude fields into GeoJSON Point format
+
 Create a 2dsphere index on the location field to enable geospatial queries
 
 
@@ -44,6 +48,7 @@ Finally, we merged the original collection and the translated entries into a uni
 
 
 Challenges encountered:
+
 No Images in Original Dataset: The dataset did not include any images, so we had to build a separate process to fetch images from Wikipedia and link them to the correct records.
 
 Difficulty Fetching Images: Not all sites had reliable or consistent image results on Wikipedia, which led to gaps that required fallback handling with a default image.
@@ -58,6 +63,7 @@ Inconsistent Field Structures: Some fields across records were named or formatte
 3. Volume
 
 Here are the results of countDocuments() for our collections:
+
 db.sites_merged.countDocuments()
 5639
 
