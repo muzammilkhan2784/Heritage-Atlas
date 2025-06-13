@@ -4,11 +4,11 @@
 We used the following stack for our UNESCO World Heritage Sites project:
 
 Backend
-Flask (Python): For the web framework as it is lightweight, easy to integrate with MongoDB, and allows rapid development.
-MongoDB: A NoSQL database ideal for storing semi-structured UNESCO site data including text, coordinates, and images.
-GridFS: Used to store and retrieve site images efficiently inside MongoDB.
-Pymongo: Python library to interact with MongoDB from Flask.
-MongoDB Authentication: Configured a mongoapp user with readWrite privileges to ensure secure database access.
+a. Flask (Python): For the web framework as it is lightweight, easy to integrate with MongoDB, and allows rapid development.
+b. MongoDB: A NoSQL database ideal for storing semi-structured UNESCO site data including text, coordinates, and images.
+c. GridFS: Used to store and retrieve site images efficiently inside MongoDB.
+d. Pymongo: Python library to interact with MongoDB from Flask.
+e. MongoDB Authentication: Configured a mongoapp user with readWrite privileges to ensure secure database access.
 
 Frontend
 HTML/CSS (with Jinja2 templating): For the frontend interface.
