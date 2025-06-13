@@ -1,5 +1,6 @@
 # mongo-project-gridlocked
 1.  Technology Stack
+
 We used the following stack for our UNESCO World Heritage Sites project:
 
 Backend
@@ -21,6 +22,7 @@ We chose this stack because it is lightweight, scalable, integrates well with ge
 
 
 2.  Process
+
 We began by sourcing our dataset from Kaggle:
 [ 🔗 UNESCO Heritage Sites 2021 – Kaggle] (https://www.kaggle.com/datasets/ramjasmaurya/unesco-heritage-sites2021/data)
 
@@ -54,6 +56,7 @@ Inconsistent Field Structures: Some fields across records were named or formatte
 
 
 3. Volume
+
 Here are the results of countDocuments() for our collections:
 db.sites_merged.countDocuments()
 5639
@@ -67,6 +70,7 @@ db.fs.chunks.countDocuments()
 
 
 4.  Variety
+
 Here are some interesting searches that demonstrate variety:
 
 Search for “temple” → Click on "Megalithic Temples of Maltar" to view multilingual descriptions and additional site details.
@@ -82,6 +86,7 @@ Search near Paris: Use coordinates 48.85, 2.35 with a 100 km radius → Filters 
 
 
 5. Bells and Whistles
+
 Some standout features of our app:
 
 a. Geospatial Search: Users can search for sites within a specific radius of a given location using latitude, longitude, and distance.
