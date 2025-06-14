@@ -1,0 +1,67 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+  <p style="text-align: center; color: #666; margin-bottom: 20px;">
+    Search for world-heritage sites by keyword or geographic location.
+  </p>
+
+  <form method="POST">
+    <label>Keyword:</label>
+    <input type="text" name="query" placeholder="e.g. temple, mountain" value="{{ keyword }}">
+
+    <label>Latitude:</label>
+    <input type="text" name="lat" placeholder="e.g. 12.0" value="{{ lat }}">
+
+    <label>Longitude:</label>
+    <input type="text" name="lon" placeholder="e.g. 39.0" value="{{ lon }}">
+
+    <label>Radius (km):</label>
+    <input type="number" name="radius" step="0.1" min="0" value="{{ radius }}">
+
+    <input type="submit" value="Search">
+  </form>
+
+  <!-- Map Container -->
+  <div id="map"></div>
+
+  {% if results %}
+    <h3>Search Results:</h3>
+    {% for doc in results %}
+      <div class="result-card">
+        <div class="result-left">
+          <strong>{{ doc.Name }}</strong> – {{ doc.date_inscribed }}
+        </div>
+        <div class="result-right">
+          <select onchange="window.location.href=this.value">
+            <option disabled selected>Select language</option>
+            {% for lang in languages %}
+              <option value="{{ url_for('view', site_id=doc.site_id) }}?lang={{ lang }}">{{ lang }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    {% endfor %}
+  {% elif request.method == "POST" %}
+    <p>No results found.</p>
+  {% endif %}
+
+  <!-- Leaflet Script -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    const map = L.map('map').setView([25.2, 55.3], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Update form fields on map click
+    map.on('click', function(e) {
+      const lat = e.latlng.lat.toFixed(4);
+      const lon = e.latlng.lng.toFixed(4);
+      document.querySelector('input[name="lat"]').value = lat;
+      document.querySelector('input[name="lon"]').value = lon;
+    });
+  </script>
+{% endblock %}

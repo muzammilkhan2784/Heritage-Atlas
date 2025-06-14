@@ -1,0 +1,213 @@
+/* ===== BASE RESET ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: #f4f4f8;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #0056b3;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+main {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* ===== BACK LINK ===== */
+.back-link {
+  margin-bottom: 20px;
+}
+
+.back-link a {
+  color: #0056b3;
+  text-decoration: none;
+  font-weight: 500;
+  background-color: #e6f0ff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.back-link a:hover {
+  background-color: #d4e6ff;
+}
+
+/* ===== FORM STYLING ===== */
+form {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  max-width: 500px;
+  margin: 0 auto 30px auto;
+}
+
+form label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 6px;
+}
+
+form input[type="text"],
+form input[type="number"],
+form select,
+form textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  transition: border-color 0.2s ease-in-out;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+form input[type="submit"] {
+  width: 100%;
+  font-size: 1rem;
+  padding: 12px;
+  margin-top: 25px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+form input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* ===== LEAFLET MAP ===== */
+#map {
+  width: 100%;
+  height: 300px;
+  margin-top: 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* ===== RESULT CARD ===== */
+.result-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin: 10px 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.result-left {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.result-right select {
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white;
+}
+
+/* ===== DETAIL VIEW ===== */
+.content-container {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 30px;
+  margin: 20px 0;
+}
+
+.details p {
+  margin: 5px 0;
+}
+
+/* ===== IMAGE ===== */
+img {
+  max-width: 100%;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== COMMENTS ===== */
+.comments-section {
+  margin-top: 40px;
+}
+
+.comment-box {
+  background-color: #fafafa;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.comment-box p {
+  margin: 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .details {
+    grid-template-columns: 1fr;
+  }
+
+  form {
+    padding: 20px;
+  }
+
+  .result-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .result-right {
+    width: 100%;
+  }
+
+  .result-right select {
+    width: 100%;
+  }
+
+  #map {
+    height: 250px;
+  }
+}

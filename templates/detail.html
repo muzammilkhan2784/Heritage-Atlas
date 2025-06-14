@@ -1,0 +1,40 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+  <div class="back-link">
+    <a href="{{ url_for('search') }}">← Back to Search</a>
+  </div>
+
+  <div class="content-container">
+    <h2>{{ doc.Name }}</h2>
+
+    <div class="details">
+      <p><strong>Description:</strong> {{ doc.short_description|safe }}</p>
+      <p><strong>Inscribed:</strong> {{ doc.date_inscribed }}</p>
+      <p><strong>Region:</strong> {{ doc.Region }}</p>
+      <p><strong>Category:</strong> {{ doc.category_long }}</p>
+      <p><strong>Country:</strong> {{ doc["Country name"] }}</p>
+      <p><strong>Area (ha):</strong> {{ doc.area_hectares }}</p>
+    </div>
+
+    <img src="data:image/jpeg;base64,{{ image }}">
+
+    <hr style="margin: 30px 0;">
+
+    <h3>Leave a Comment:</h3>
+    <form method="POST">
+      <textarea name="comment" rows="3" placeholder="Write your comment here..." required
+        style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 1rem;"></textarea>
+      <input type="submit" value="Submit Comment" style="margin-top: 10px;">
+    </form>
+
+    {% if doc.comments %}
+      <h3 style="margin-top: 30px;">Comments:</h3>
+      <ul>
+        {% for c in doc.comments %}
+          <li style="background: #f9f9f9; padding: 10px; margin-bottom: 8px; border-radius: 6px;">{{ c }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+{% endblock %}
