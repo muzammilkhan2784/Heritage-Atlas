@@ -1,4 +1,11 @@
-# mongo-project-gridlocked
+# UNESCO World Heritage Explorer
+### (MongoDB, Flask, GridFS, GeoJSON, Geospatial Search)
+
+Multilingual search platform enabling users to discover UNESCO World Heritage Sites through keyword, image, and location-based search.
+
+- Implemented geospatial and regex-based search using MongoDB nearSphere queries and GeoJSON data
+- Integrated GridFS image storage and translated site information into six languages
+
 1.  Technology Stack
 
 I used the following stack for my UNESCO World Heritage Sites project:
