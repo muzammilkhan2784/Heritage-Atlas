@@ -1,7 +1,7 @@
 # mongo-project-gridlocked
 1.  Technology Stack
 
-We used the following stack for our UNESCO World Heritage Sites project:
+I used the following stack for my UNESCO World Heritage Sites project:
 
 Backend
 Flask (Python): For the web framework as it is lightweight, easy to integrate with MongoDB, and allows rapid development.
@@ -17,19 +17,19 @@ Tools & Utilities
 VSCode & GitHub Classroom: For code development and collaboration.
 Ubuntu VM on RLES: Deployed and tested in a Linux virtual environment for compatibility.
 
-We chose this stack because it is lightweight, scalable, integrates well with geospatial queries, and is beginner-friendly for rapid development.
+I chose this stack because it is lightweight, scalable, integrates well with geospatial queries, and is beginner-friendly for rapid development.
 
 
 
 2.  Process
 
-We began by sourcing our dataset from Kaggle:
+I began by sourcing my dataset from Kaggle:
 [ 🔗 UNESCO Heritage Sites 2021 – Kaggle] (https://www.kaggle.com/datasets/ramjasmaurya/unesco-heritage-sites2021/data)
 
-After downloading the dataset, we cleansed it by removing unnecessary columns and standardized formats such as dates and coordinate fields. Once cleaned, the dataset was imported into MongoDB using mongoimport, and stored in a collection named Sites.
-Since the dataset did not include any images, we used a Python script to automatically fetch the actual image files from Wikipedia using the site names. The script queried the Wikipedia API to obtain the primary image for each site, then downloaded the image content and saved it locally using the site's site_id as the filename. These images were stored in a dedicated folder, ready to be uploaded into MongoDB using GridFS.
+After downloading the dataset, I cleansed it by removing unnecessary columns and standardized formats such as dates and coordinate fields. Once cleaned, the dataset was imported into MongoDB using mongoimport, and stored in a collection named Sites.
+Since the dataset did not include any images, I used a Python script to automatically fetch the actual image files from Wikipedia using the site names. The script queried the Wikipedia API to obtain the primary image for each site, then downloaded the image content and saved it locally using the site's site_id as the filename. These images were stored in a dedicated folder, ready to be uploaded into MongoDB using GridFS.
 
-We then used another Python script to:
+I then used another Python script to:
 
 Upload the images to MongoDB using GridFS
 
@@ -40,16 +40,16 @@ Convert latitude and longitude fields into GeoJSON Point format
 Create a 2dsphere index on the location field to enable geospatial queries
 
 
-For entries where an image could not be found on Wikipedia, we used a default placeholder image, which was uploaded once to GridFS and linked to all sites missing an individual image.
+For entries where an image could not be found on Wikipedia, I used a default placeholder image, which was uploaded once to GridFS and linked to all sites missing an individual image.
 
-After our initial submission, we found that the dataset was relatively small. To expand its variety and demonstrate multilingual capabilities, we duplicated the dataset and used another Python script to translate key fields (such as the name and description) into six different languages using the Google Translate API. These translated records were stored in a separate collection called sites_translated.
+After my initial submission, I found that the dataset was relatively small. To expand its variety and demonstrate multilingual capabilities, I duplicated the dataset and used another Python script to translate key fields (such as the name and description) into six different languages using the Google Translate API. These translated records were stored in a separate collection called sites_translated.
 
-Finally, we merged the original collection and the translated entries into a unified collection named sites_merged, which now powers all multilingual, geospatial, and image-driven features in the final application.
+Finally, I merged the original collection and the translated entries into a unified collection named sites_merged, which now powers all multilingual, geospatial, and image-driven features in the final application.
 
 
 Challenges encountered:
 
-No Images in Original Dataset: The dataset did not include any images, so we had to build a separate process to fetch images from Wikipedia and link them to the correct records.
+No Images in Original Dataset: The dataset did not include any images, so I had to build a separate process to fetch images from Wikipedia and link them to the correct records.
 
 Difficulty Fetching Images: Not all sites had reliable or consistent image results on Wikipedia, which led to gaps that required fallback handling with a default image.
 
@@ -62,7 +62,7 @@ Inconsistent Field Structures: Some fields across records were named or formatte
 
 3. Volume
 
-Here are the results of countDocuments() for our collections:
+Here are the results of countDocuments() for my collections:
 
 db.sites_merged.countDocuments()
 5639
@@ -93,7 +93,7 @@ Search near Paris: Use coordinates 48.85, 2.35 with a 100 km radius → Filters 
 
 5. Bells and Whistles
 
-Some standout features of our app:
+Some standout features of my app:
 
 a. Geospatial Search: Users can search for sites within a specific radius of a given location using latitude, longitude, and distance.
 
@@ -113,4 +113,4 @@ g. Persistent Search Inputs: Form data is stored in session to retain search val
 Secure Access: Database is protected using a MongoDB user account with minimal required permissions.
 
 
-This project combines multilingual content, geospatial logic, and image-based visualization into a single web platform. We're proud of how smoothly Flask, MongoDB, and GridFS worked together to create a seamless, educational user experience.
+This project combines multilingual content, geospatial logic, and image-based visualization into a single web platform. I'm proud of how smoothly Flask, MongoDB, and GridFS worked together to create a seamless, educational user experience.
