@@ -14,14 +14,14 @@ Backend
 Flask (Python): For the web framework as it is lightweight, easy to integrate with MongoDB, and allows rapid development.
 MongoDB: A NoSQL database ideal for storing semi-structured UNESCO site data including text, coordinates, and images.
 GridFS: Used to store and retrieve site images efficiently inside MongoDB.
-Pymongo: Python library to interact with MongoDB from Flask.
+PyMongo: Python library to interact with MongoDB from Flask.
 MongoDB Authentication: Configured a mongoapp user with readWrite privileges to ensure secure database access.
 
 Frontend
 HTML/CSS (with Jinja2 templating): For the frontend interface.
 
 Tools & Utilities 
-VSCode & GitHub Classroom: For code development and collaboration.
+VS Code & GitHub Classroom: For code development and collaboration.
 Ubuntu VM on RLES: Deployed and tested in a Linux virtual environment for compatibility.
 
 I chose this stack because it is lightweight, scalable, integrates well with geospatial queries, and is beginner-friendly for rapid development.
@@ -86,7 +86,7 @@ db.fs.chunks.countDocuments()
 
 Here are some interesting searches that demonstrate variety:
 
-Search for “temple” → Click on "Megalithic Temples of Maltar" to view multilingual descriptions and additional site details.
+Search for “temple” → Click on "Megalithic Temples of Malta" to view multilingual descriptions and additional site details.
 
 Geospatial Search: Enter coordinates 13.4125, 103.866667 with a radius of 100 km → Returns heritage sites located in Cambodia.
 
