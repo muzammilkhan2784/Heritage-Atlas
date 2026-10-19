@@ -1,7 +1,101 @@
 {% extends "base_template.html" %}
 {% block title %}{{ doc.name }} · Heritage Atlas{% endblock %}
 {% block content %}
-<section class="detail-wrap"><a class="text-link back" id="back-to-results" href="{{ url_for('search', language=doc.language) }}#explore">← Back to the atlas</a><div class="detail-top"><p class="eyebrow">{{ doc.category|upper }} HERITAGE / {{ doc.country }}</p><form method="get"><label for="detail-language">Read this story in</label><select name="lang" id="detail-language">{% for language in languages %}<option {% if language == doc.language %}selected{% endif %}>{{ language }}</option>{% endfor %}</select><button class="button button-small">Apply</button></form></div><h1 class="detail-title" lang="{{ language_codes[doc.language] }}" dir="auto">{{ doc.name }}</h1><p class="detail-region">{{ doc.region }} <span>· Inscribed in {{ doc.year }}</span></p>
-<div class="detail-layout"><article><div class="detail-image-wrap"><img class="detail-image" src="{{ url_for('image', site_id=doc.site_id) }}" alt="{% if doc.image_credit is defined %}{{ doc.name }}{% else %}Illustrated mountain landscape; site photography is not available{% endif %}" width="1000" height="500"><span class="image-caption">{% if doc.image_credit is defined %}{{ doc.image_credit }} · <a href="{{ doc.image_source }}" target="_blank" rel="noopener noreferrer">Image source ↗</a>{% else %}Illustration · Site photography is not included in this archive{% endif %}</span></div><p class="eyebrow story-label">THE STORY OF THIS PLACE</p><p class="detail-description" lang="{{ language_codes[doc.language] }}" dir="auto">{{ doc.description }}</p>{% if doc.language != 'English' %}<p class="translation-note">{{ doc.translation_note }} Translation coverage varies across the archive. <a href="{{ url_for('view', site_id=doc.site_id, lang='English') }}">Read the English record →</a></p>{% endif %}<section class="field-notes"><p class="eyebrow">YOUR PERSONAL FIELD NOTES</p><h2>What caught your curiosity?</h2><p>Keep a note for your next visit. Notes stay in this browser on this device.</p><label class="sr-only" for="note">Private note about {{ doc.name }}</label><textarea id="note" maxlength="2000" rows="4" data-site-id="{{ doc.site_id }}" placeholder="A detail to remember. A question to explore."></textarea><div class="note-actions"><button type="button" class="button" id="save-note">Save note</button><button type="button" class="text-link" id="delete-note">Delete note</button><span role="status" id="note-status"></span></div></section></article><aside class="detail-aside"><p class="eyebrow">AT A GLANCE</p><dl><dt>Country / territory</dt><dd>{{ doc.country or 'Not recorded' }}</dd><dt>Heritage category</dt><dd>{{ doc.category }}</dd><dt>Year of inscription</dt><dd>{{ doc.year }}</dd><dt>Recorded area</dt><dd>{% if doc.area_hectares is not none %}{{ '{:,.2f}'.format(doc.area_hectares) }} hectares{% else %}Not recorded{% endif %}</dd><dt>Coordinates</dt><dd>{{ '%.4f'|format(doc.location.coordinates[1]) }}, {{ '%.4f'|format(doc.location.coordinates[0]) }}</dd><dt>Available languages</dt><dd>{{ languages|length }} of 7</dd></dl><a class="button" href="{{ url_for('search', lat=doc.location.coordinates[1], lon=doc.location.coordinates[0], radius=200, language=doc.language) }}#explore">Discover nearby sites ↗</a><div id="map" class="detail-map" role="region" aria-label="Site location"></div><p class="help">Coordinates identify a representative point, not the full boundary. Archive record {{ doc.site_id }}.</p><div class="source-note"><strong>A note on this archive</strong><p>This is a historical record through 2021. Names, boundaries, and inscription status may have changed.</p><a href="https://whc.unesco.org/en/list/" target="_blank" rel="noopener noreferrer">Check the official UNESCO list ↗</a></div></aside></div></section>
-<script type="application/json" id="map-data">{{ [doc]|tojson }}</script>
+  <section class="detail-wrap">
+<a class="text-link back"
+   id="back-to-results"
+   href="{{ url_for('search', language=doc.language) }}#explore">← Back to the atlas</a>
+<div class="detail-top">
+<p class="eyebrow">{{ doc.category|upper }} HERITAGE / {{ doc.country }}</p>
+<form method="get">
+<label for="detail-language">Read this story in</label>
+<select name="lang" id="detail-language">
+{% for language in languages %}
+<option {% if language == doc.language %}selected{% endif %}>{{ language }}</option>
+{% endfor %}
+</select>
+<button class="button button-small">Apply</button>
+</form>
+</div>
+<h1 class="detail-title"
+    lang="{{ language_codes[doc.language] }}"
+    dir="auto">{{ doc.name }}</h1>
+<p class="detail-region">{{ doc.region }} <span>· Inscribed in {{ doc.year }}</span>
+</p>
+    <div class="detail-layout">
+<article>
+<div class="detail-image-wrap">
+<img class="detail-image"
+     src="{{ url_for('image', site_id=doc.site_id) }}"
+     alt="{% if doc.image_credit is defined %}{{ doc.name }}{% else %}Illustrated mountain landscape; site photography is not available{% endif %}"
+     width="1000"
+     height="500">
+<span class="image-caption">
+{% if doc.image_credit is defined %}{{ doc.image_credit }} · <a href="{{ doc.image_source }}"
+    target="_blank"
+    rel="noopener noreferrer">Image source ↗</a>
+{% else %}Illustration · Site photography is not included in this archive{% endif %}
+</span>
+</div>
+<p class="eyebrow story-label">THE STORY OF THIS PLACE</p>
+<p class="detail-description"
+   lang="{{ language_codes[doc.language] }}"
+   dir="auto">{{ doc.description }}</p>
+{% if doc.language != "English" %}
+<p class="translation-note">{{ doc.translation_note }} Translation coverage varies across the archive. <a href="{{ url_for('view', site_id=doc.site_id, lang='English') }}">Read the English record →</a>
+</p>
+{% endif %}
+<section class="field-notes">
+<p class="eyebrow">YOUR PERSONAL FIELD NOTES</p>
+<h2>What caught your curiosity?</h2>
+<p>Keep a note for your next visit. Notes stay in this browser on this device.</p>
+<label class="sr-only" for="note">Private note about {{ doc.name }}</label>
+<textarea id="note"
+          maxlength="2000"
+          rows="4"
+          data-site-id="{{ doc.site_id }}"
+          placeholder="A detail to remember. A question to explore.">
+</textarea>
+<div class="note-actions">
+<button type="button" class="button" id="save-note">Save note</button>
+<button type="button" class="text-link" id="delete-note">Delete note</button>
+<span role="status" id="note-status">
+</span>
+</div>
+</section>
+</article>
+<aside class="detail-aside">
+<p class="eyebrow">AT A GLANCE</p>
+<dl>
+<dt>Country / territory</dt>
+<dd>{{ doc.country or 'Not recorded' }}</dd>
+<dt>Heritage category</dt>
+<dd>{{ doc.category }}</dd>
+<dt>Year of inscription</dt>
+<dd>{{ doc.year }}</dd>
+<dt>Recorded area</dt>
+<dd>
+{% if doc.area_hectares is not none %}{{ '{:,.2f}'.format(doc.area_hectares) }} hectares{% else %}Not recorded{% endif %}
+</dd>
+<dt>Coordinates</dt>
+<dd>{{ '%.4f'|format(doc.location.coordinates[1]) }}, {{ '%.4f'|format(doc.location.coordinates[0]) }}</dd>
+<dt>Available languages</dt>
+<dd>{{ languages|length }} of 7</dd>
+</dl>
+<a class="button"
+   href="{{ url_for('search', lat=doc.location.coordinates[1], lon=doc.location.coordinates[0], radius=200, language=doc.language) }}#explore">Discover nearby sites ↗</a>
+<div id="map" class="detail-map" role="region" aria-label="Site location">
+</div>
+<p class="help">Coordinates identify a representative point, not the full boundary. Archive record {{ doc.site_id }}.</p>
+<div class="source-note">
+<strong>A note on this archive</strong>
+<p>This is a historical record through 2021. Names, boundaries, and inscription status may have changed.</p>
+<a href="https://whc.unesco.org/en/list/"
+   target="_blank"
+   rel="noopener noreferrer">Check the official UNESCO list ↗</a>
+</div>
+</aside>
+</div>
+</section>
+  <script type="application/json" id="map-data">{{ [doc]|tojson }}</script>
 {% endblock %}

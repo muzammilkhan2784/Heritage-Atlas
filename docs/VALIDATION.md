@@ -46,7 +46,7 @@ python scripts/browser_check.py
 python scripts/benchmark.py
 ```
 
-Browser reports/screenshots, the accessibility report, and timing samples are saved under ignored `work/`. GitHub Actions separately verifies the repository on Ubuntu 24.04 / Python 3.12 using a native MongoDB process and uploads browser artifacts. The workflow's actual run status is available through the README badge and the repository Actions page.
+Browser reports/screenshots, the accessibility report, and timing samples are saved under ignored `work/`. GitHub Actions also passed on Ubuntu 24.04 / Python 3.12 using a native MongoDB process and uploaded browser artifacts. A local restart against the persistent Windows database also succeeded. The workflow's actual run status is available through the README badge and the repository Actions page.
 
 ## Remaining boundaries
 

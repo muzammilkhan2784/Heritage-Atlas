@@ -1,22 +1,106 @@
 {% extends "base_template.html" %}
 {% block content %}
-<section class="hero">
-  <div class="hero-copy"><p class="eyebrow"><span></span> THE WORLD, INHERITED</p><h1>Extraordinary places.<br><em>Enduring stories.</em></h1><p class="hero-description">From ancient cities to untamed landscapes, discover the places that tell our shared human story.</p><div class="hero-links"><a href="#explore">Find your next discovery <span>↓</span></a><span>Culture. Nature. Connection.</span></div></div>
-  <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="globe"><div class="globe-lat lat-one"></div><div class="globe-lat lat-two"></div><div class="globe-lon lon-one"></div><div class="globe-lon lon-two"></div><span class="globe-pin pin-one"></span><span class="globe-pin pin-two"></span><span class="globe-pin pin-three"></span></div><span class="art-label label-top">EXPLORE WITHOUT BORDERS</span><span class="art-label label-bottom">40° 42′ N &nbsp; 74° 00′ W</span><span class="art-number">01—07</span></div>
-</section>
-<section class="stats" aria-label="Archive statistics"><div><strong>{{ '{:,}'.format(metadata.sites) }}</strong><span>heritage sites</span></div><div><strong>{{ metadata.languages|length }}</strong><span>languages to explore</span></div><div><strong>{{ metadata.regions|length }}</strong><span>world regions</span></div><p>A window into our world.<br><span>A historical archive, through 2021.</span></p></section>
-<section id="explore" class="explore">
-  <div class="section-heading"><div><p class="eyebrow">YOUR JOURNEY STARTS HERE</p><h2>Explore the collection<span>.</span></h2></div><span class="section-note">A little curiosity goes a long way.</span></div>
-  <form method="get" id="search-form" class="search-panel" role="search">
-    <div class="search-main"><label class="keyword-label" for="q">Search the archive<input id="q" name="q" type="search" value="{{ filters.q }}" maxlength="120" placeholder="A place, a landscape, a story…"></label><label for="language">Read in<select id="language" name="language">{% for language in metadata.languages %}<option {% if language == filters.language %}selected{% endif %}>{{ language }}</option>{% endfor %}</select></label><button class="button" type="submit">Explore sites <span aria-hidden="true">↗</span></button></div>
-    <div class="search-filters"><label for="category">Category<select id="category" name="category"><option value="">All categories</option>{% for category in categories %}<option {% if filters.category == category %}selected{% endif %}>{{ category }}</option>{% endfor %}</select></label><label for="region">Region<select id="region" name="region"><option value="">Everywhere</option>{% for region in metadata.regions %}<option {% if filters.region == region %}selected{% endif %}>{{ region }}</option>{% endfor %}</select></label><a class="text-link reset" href="{{ url_for('search') }}#explore">Reset filters ↺</a></div>
-    <details class="nearby" {% if filters.lat is not none %}open{% endif %}><summary>◎ Search around a location <span>Coordinates or your current position</span></summary><div class="nearby-fields"><label for="lat">Latitude<input id="lat" name="lat" type="number" min="-90" max="90" step="any" value="{{ filters.lat if filters.lat is not none else '' }}" placeholder="48.8566"></label><label for="lon">Longitude<input id="lon" name="lon" type="number" min="-180" max="180" step="any" value="{{ filters.lon if filters.lon is not none else '' }}" placeholder="2.3522"></label><label for="radius">Radius (km)<input id="radius" name="radius" type="number" min="0.1" max="20000" step="any" value="{{ filters.radius if filters.radius is not none else '' }}" placeholder="100"></label><button type="button" class="button button-light" id="locate">Use my location</button><button type="button" class="text-link" id="clear-location">Clear location</button></div><p class="help" id="location-status" role="status">Select a point on the map or enter coordinates, then choose Explore sites.</p></details>
-  </form>
-  <div class="discovery-layout"><section class="results" aria-labelledby="results-title"><div class="results-heading"><h3 id="results-title">{{ '{:,}'.format(result.total) }} discoveries{% if filters.q %} for “{{ filters.q }}”{% endif %}</h3><span>{% if filters.lat is not none %}Nearest first{% else %}A–Z by name{% endif %}</span></div>
-  {% if result['items'] %}<div class="cards">{% for doc in result['items'] %}<article class="site-card"><a class="card-link" href="{{ url_for('view', site_id=doc.site_id, lang=doc.language) }}"><div class="card-art category-{{ doc.category|lower }}"><span class="card-category">{{ doc.category }}</span><span class="card-year">EST. {{ doc.year }}</span><div class="landmark" aria-hidden="true">{% if doc.category == 'Natural' %}△{% elif doc.category == 'Mixed' %}◒{% else %}▥{% endif %}</div><span class="card-coordinates">{{ '%.2f'|format(doc.location.coordinates[1]) }}° LAT / {{ '%.2f'|format(doc.location.coordinates[0]) }}° LON</span></div><div class="card-body"><p class="card-country">{{ doc.country or doc.region }}</p><h4 lang="{{ language_codes[doc.language] }}" dir="auto">{{ doc.name }}</h4><p class="card-description" lang="{{ language_codes[doc.language] }}" dir="auto">{{ doc.description }}</p><div class="card-bottom"><span>{% if doc.distance_m is defined %}{{ '%.1f'|format(doc.distance_m / 1000) }} km away{% else %}{{ doc.region }}{% endif %}</span><span class="card-arrow" aria-hidden="true">↗</span></div></div></a></article>{% endfor %}</div>
-  <nav class="pagination" aria-label="Search result pages">{% if result.page > 1 %}<a class="button button-light" href="{{ page_url(result.page - 1) }}#explore">← Previous</a>{% endif %}<span>Page {{ result.page }} of {{ result.pages }}</span>{% if result.page < result.pages %}<a class="button button-light" href="{{ page_url(result.page + 1) }}#explore">Next →</a>{% endif %}</nav>
-  {% else %}<div class="empty-state"><span aria-hidden="true">◎</span><h3>No discoveries here yet.</h3><p>Try a broader keyword, a larger radius, or another language. Translation coverage varies by site.</p><a class="button" href="{{ url_for('search') }}#explore">Explore all sites</a></div>{% endif %}</section>
-  <aside class="map-panel"><div class="map-heading"><span class="eyebrow">A DIFFERENT PERSPECTIVE</span><h3>Put it on the map.</h3><p>Showing this page’s discoveries. Click anywhere to set your search location.</p></div><div id="map" role="region" aria-label="Interactive map of search results"></div><div class="map-legend"><span class="legend-dot"></span> Heritage site <span class="map-count">{{ result['items']|length }} on this page</span></div><div class="map-note"><span aria-hidden="true">↗</span><p>Every place has a story.<br><strong>Choose a marker to discover it.</strong></p></div><p class="help">Map tiles require an internet connection. All search and detail pages work without map tiles.</p></aside></div>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow"><span></span> THE WORLD, INHERITED</p>
+      <h1>
+        Extraordinary places.
+        <br>
+        <em>Enduring stories.</em>
+      </h1>
+      <p class="hero-description">From ancient cities to untamed landscapes, discover the places that tell our shared human story.</p>
+      <div class="hero-links"><a href="#explore">Find your next discovery <span>↓</span></a><span>Culture. Nature. Connection.</span></div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="orbit orbit-one"></div>
+      <div class="orbit orbit-two"></div>
+      <div class="globe">
+        <div class="globe-lat lat-one"></div>
+        <div class="globe-lat lat-two"></div>
+        <div class="globe-lon lon-one"></div>
+        <div class="globe-lon lon-two"></div>
+        <span class="globe-pin pin-one"></span><span class="globe-pin pin-two"></span><span class="globe-pin pin-three"></span>
+      </div>
+      <span class="art-label label-top">EXPLORE WITHOUT BORDERS</span><span class="art-label label-bottom">40° 42′ N &nbsp; 74° 00′ W</span><span class="art-number">01—07</span>
+    </div>
+  </section>
+  <section class="stats" aria-label="Archive statistics">
+    <div><strong>{{ '{:,}'.format(metadata.sites) }}</strong><span>heritage sites</span></div>
+    <div><strong>{{ metadata.languages|length }}</strong><span>languages to explore</span></div>
+    <div><strong>{{ metadata.regions|length }}</strong><span>world regions</span></div>
+    <p>
+      A window into our world.
+      <br>
+      <span>A historical archive, through 2021.</span>
+    </p>
+  </section>
+  <section id="explore" class="explore">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">YOUR JOURNEY STARTS HERE</p>
+        <h2>Explore the collection<span>.</span></h2>
+      </div>
+      <span class="section-note">A little curiosity goes a long way.</span>
+    </div>
+    <form method="get" id="search-form" class="search-panel" role="search">
+      <div class="search-main"><label class="keyword-label" for="q">Search the archive<input id="q"
+       name="q"
+       type="search"
+       value="{{ filters.q }}"
+       maxlength="120"
+       placeholder="A place, a landscape, a story…"></label><label for="language">Read in<select id="language" name="language">{% for language in metadata.languages %}<option {% if language == filters.language %}selected{% endif %}>{{ language }}</option>{% endfor %}</select></label><button class="button" type="submit">Explore sites <span aria-hidden="true">↗</span></button></div>
+      <div class="search-filters"><label for="category">Category<select id="category" name="category"><option value="">All categories</option>{% for category in categories %}<option {% if filters.category == category %}selected{% endif %}>{{ category }}</option>{% endfor %}</select></label><label for="region">Region<select id="region" name="region"><option value="">Everywhere</option>{% for region in metadata.regions %}<option {% if filters.region == region %}selected{% endif %}>{{ region }}</option>{% endfor %}</select></label><a class="text-link reset" href="{{ url_for('search') }}#explore">Reset filters ↺</a></div>
+      <details class="nearby" {% if filters.lat is not none %}open{% endif %}><summary>◎ Search around a location <span>Coordinates or your current position</span></summary><div class="nearby-fields"><label for="lat">Latitude<input id="lat"
+       name="lat"
+       type="number"
+       min="-90"
+       max="90"
+       step="any"
+       value="{{ filters.lat if filters.lat is not none else '' }}"
+       placeholder="48.8566"></label><label for="lon">Longitude<input id="lon"
+       name="lon"
+       type="number"
+       min="-180"
+       max="180"
+       step="any"
+       value="{{ filters.lon if filters.lon is not none else '' }}"
+       placeholder="2.3522"></label><label for="radius">Radius (km)<input id="radius"
+       name="radius"
+       type="number"
+       min="0.1"
+       max="20000"
+       step="any"
+       value="{{ filters.radius if filters.radius is not none else '' }}"
+       placeholder="100"></label><button type="button" class="button button-light" id="locate">Use my location</button><button type="button" class="text-link" id="clear-location">Clear location</button></div><p class="help" id="location-status" role="status">Select a point on the map or enter coordinates, then choose Explore sites.</p></details>
+    </form>
+    <div class="discovery-layout"><section class="results" aria-labelledby="results-title"><div class="results-heading"><h3 id="results-title">{{ '{:,}'.format(result.total) }} discoveries{% if filters.q %} for “{{ filters.q }}”{% endif %}</h3><span>{% if filters.lat is not none %}Nearest first{% else %}A–Z by name{% endif %}</span></div>
+      {% if result["items"] %}<div class="cards">{% for doc in result['items'] %}<article class="site-card"><a class="card-link"
+   href="{{ url_for('view', site_id=doc.site_id, lang=doc.language) }}"><div class="card-art category-{{ doc.category|lower }}"><span class="card-category">{{ doc.category }}</span><span class="card-year">EST. {{ doc.year }}</span><div class="landmark" aria-hidden="true">{% if doc.category == "Natural" %}△{% elif doc.category == "Mixed" %}◒{% else %}▥{% endif %}</div><span class="card-coordinates">{{ '%.2f'|format(doc.location.coordinates[1]) }}° LAT / {{ '%.2f'|format(doc.location.coordinates[0]) }}° LON</span></div><div class="card-body"><p class="card-country">{{ doc.country or doc.region }}</p><h4 lang="{{ language_codes[doc.language] }}" dir="auto">{{ doc.name }}</h4><p class="card-description"
+   lang="{{ language_codes[doc.language] }}"
+   dir="auto">{{ doc.description }}</p><div class="card-bottom"><span>{% if doc.distance_m is defined %}{{ '%.1f'|format(doc.distance_m / 1000) }} km away{% else %}{{ doc.region }}{% endif %}</span><span class="card-arrow" aria-hidden="true">↗</span></div></div></a></article>{% endfor %}</div>
+      <nav class="pagination" aria-label="Search result pages">{% if result.page > 1 %}<a class="button button-light"
+   href="{{ page_url(result.page - 1) }}#explore">← Previous</a>{% endif %}<span>Page {{ result.page }} of {{ result.pages }}</span>{% if result.page < result.pages %}<a class="button button-light"
+   href="{{ page_url(result.page + 1) }}#explore">Next →</a>{% endif %}</nav>
+    {% else %}<div class="empty-state"><span aria-hidden="true">◎</span><h3>No discoveries here yet.</h3><p>Try a broader keyword, a larger radius, or another language. Translation coverage varies by site.</p><a class="button" href="{{ url_for('search') }}#explore">Explore all sites</a></div>{% endif %}</section>
+    <aside class="map-panel">
+      <div class="map-heading">
+        <span class="eyebrow">A DIFFERENT PERSPECTIVE</span>
+        <h3>Put it on the map.</h3>
+        <p>Showing this page’s discoveries. Click anywhere to set your search location.</p>
+      </div>
+      <div id="map" role="region" aria-label="Interactive map of search results"></div>
+      <div class="map-legend"><span class="legend-dot"></span> Heritage site <span class="map-count">{{ result['items']|length }} on this page</span></div>
+      <div class="map-note">
+        <span aria-hidden="true">↗</span>
+        <p>
+          Every place has a story.
+          <br>
+          <strong>Choose a marker to discover it.</strong>
+        </p>
+      </div>
+      <p class="help">Map tiles require an internet connection. All search and detail pages work without map tiles.</p>
+    </aside>
+  </div>
 </section>
 <script type="application/json" id="map-data">{{ result['items']|tojson }}</script>
 {% endblock %}

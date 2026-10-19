@@ -1,25 +1,53 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Explore a historical archive of UNESCO World Heritage Sites through multilingual stories and geographic discovery.">
-  <meta name="theme-color" content="#143f36">
-  <title>{% block title %}Heritage Atlas · World Heritage Explorer{% endblock %}</title>
-  <link rel="icon" href="{{ url_for('static', filename='images/compass.svg') }}" type="image/svg+xml">
-  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <script defer src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}"></script>
-  <script defer src="{{ url_for('static', filename='js/explorer.js') }}"></script>
-</head>
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
-    <a class="brand" href="{{ url_for('search') }}" aria-label="Heritage Atlas home"><img src="{{ url_for('static', filename='images/compass.svg') }}" width="36" height="36" alt=""><span>heritage<span class="brand-light">atlas</span><small>A WORLD WORTH EXPLORING</small></span></a>
-    <nav aria-label="Main navigation"><a class="nav-active" href="{{ url_for('search') }}">Explore the atlas</a><a href="https://github.com/muzammilkhan2784/UNESCO-World-Heritage-Explorer" target="_blank" rel="noopener noreferrer">About the project ↗</a></nav>
-    <span class="edition">FIELD NOTES / VOL. 01</span>
-  </header>
-  <main id="main">{% block content %}{% endblock %}</main>
-  <footer><a class="footer-brand" href="{{ url_for('search') }}">Heritage Atlas</a><p>An independent learning project. Historical data through 2021; not affiliated with UNESCO.<br>Descriptions: UNESCO World Heritage Centre via the original coursework dataset. Translations are machine generated.</p><a href="https://whc.unesco.org/en/list/" target="_blank" rel="noopener noreferrer">Visit the official list ↗</a></footer>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+          content="Explore a historical archive of UNESCO World Heritage Sites through multilingual stories and geographic discovery.">
+    <meta name="theme-color" content="#143f36">
+    <title>{% block title %}Heritage Atlas · World Heritage Explorer{% endblock %}</title>
+    <link rel="icon"
+          href="{{ url_for('static', filename='images/compass.svg') }}"
+          type="image/svg+xml">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+    <script defer
+            src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/explorer.js') }}"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="brand"
+         href="{{ url_for('search') }}"
+         aria-label="Heritage Atlas home">
+      <img src="{{ url_for('static', filename='images/compass.svg') }}"
+           width="36"
+           height="36"
+           alt=""><span>heritage<span class="brand-light">atlas</span><small>A WORLD WORTH EXPLORING</small></span></a>
+      <nav aria-label="Main navigation">
+        <a class="nav-active" href="{{ url_for('search') }}">Explore the atlas</a><a href="https://github.com/muzammilkhan2784/UNESCO-World-Heritage-Explorer"
+   target="_blank"
+   rel="noopener noreferrer">About the project ↗</a>
+      </nav>
+      <span class="edition">FIELD NOTES / VOL. 01</span>
+    </header>
+    <main id="main">
+      {% block content %}{% endblock %}
+    </main>
+    <footer>
+      <a class="footer-brand" href="{{ url_for('search') }}">Heritage Atlas</a>
+      <p>
+        An independent learning project. Historical data through 2021; not affiliated with UNESCO.
+        <br>
+        Descriptions: UNESCO World Heritage Centre via the original coursework dataset. Translations are machine generated.
+      </p>
+      <a href="https://whc.unesco.org/en/list/"
+         target="_blank"
+         rel="noopener noreferrer">Visit the official list ↗</a>
+    </footer>
+  </body>
 </html>
