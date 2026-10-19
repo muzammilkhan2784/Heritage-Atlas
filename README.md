@@ -1,123 +1,56 @@
 # UNESCO World Heritage Explorer
-### (MongoDB, Flask, GridFS, GeoJSON, Geospatial Search)
 
-Multilingual search platform enabling users to discover UNESCO World Heritage Sites through keyword, image, and location-based search.
+A Flask and MongoDB app for browsing UNESCO World Heritage Sites. It started as my ISTE 438 database project at RIT. The updated version adds a reproducible setup, better search, a responsive interface, and automated tests.
 
-- Implemented geospatial and regex-based search using MongoDB nearSphere queries and GeoJSON data
-- Integrated GridFS image storage and translated site information into six languages
+![Search page](docs/images/explorer.png)
 
-1.  Technology Stack
+## Features
 
-I used the following stack for my UNESCO World Heritage Sites project:
+- Search site names and descriptions by keyword, category, and region.
+- Find nearby sites using coordinates and a radius, with results ordered by distance.
+- Browse records in seven languages and see sites on an interactive map.
+- Read site details and save private notes in your browser.
+- Store attributed images in GridFS, with an illustration for missing photos.
+- Access the same search through a paginated REST API.
 
-Backend
-Flask (Python): For the web framework as it is lightweight, easy to integrate with MongoDB, and allows rapid development.
-MongoDB: A NoSQL database ideal for storing semi-structured UNESCO site data including text, coordinates, and images.
-GridFS: Used to store and retrieve site images efficiently inside MongoDB.
-PyMongo: Python library to interact with MongoDB from Flask.
-MongoDB Authentication: Configured a mongoapp user with readWrite privileges to ensure secure database access.
+![Site detail page](docs/images/detail.png)
 
-Frontend
-HTML/CSS (with Jinja2 templating): For the frontend interface.
+## Run locally
 
-Tools & Utilities 
-VS Code & GitHub Classroom: For code development and collaboration.
-Ubuntu VM on RLES: Deployed and tested in a Linux virtual environment for compatibility.
+Requires Python 3.10+. On Windows, double-click **Start-Demo.cmd**, or run:
 
-I chose this stack because it is lightweight, scalable, integrates well with geospatial queries, and is beginner-friendly for rapid development.
+```powershell
+python -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python scripts/install_mongodb.py
+.venv\Scripts\python scripts/run_local.py
+```
 
+Open [localhost:5050](http://localhost:5050). The app runs directly with native MongoDB and Python/Waitress. The launcher creates local credentials and imports the data on startup. Press Ctrl+C to stop it; the database stays in `.runtime/data/`.
 
+The MongoDB installer supports Windows x64 and Ubuntu 24.04 x64. You can also use an existing MongoDB or Atlas database by setting `MONGO_URI` and `MONGO_DB`. See [setup and operations](docs/OPERATIONS.md).
 
-2.  Process
+## Data
 
-I began by sourcing my dataset from Kaggle:
-[ 🔗 UNESCO Heritage Sites 2021 – Kaggle] (https://www.kaggle.com/datasets/ramjasmaurya/unesco-heritage-sites2021/data)
+The original coursework snapshot contains **1,155 sites and 5,639 records across seven languages**, with inscription years through 2021. It is a historical dataset, not the current UNESCO list. Translations are machine generated and coverage varies by site. Site photography is not bundled.
 
-After downloading the dataset, I cleansed it by removing unnecessary columns and standardized formats such as dates and coordinate fields. Once cleaned, the dataset was imported into MongoDB using mongoimport, and stored in a collection named Sites.
-Since the dataset did not include any images, I used a Python script to automatically fetch the actual image files from Wikipedia using the site names. The script queried the Wikipedia API to obtain the primary image for each site, then downloaded the image content and saved it locally using the site's site_id as the filename. These images were stored in a dedicated folder, ready to be uploaded into MongoDB using GridFS.
+[Data sources and limitations](docs/DATA_SOURCES.md) · [Dataset counts and checksum](data/manifest.json)
 
-I then used another Python script to:
+## Tests
 
-Upload the images to MongoDB using GridFS
+Start the app, then run:
 
-Link each site document to its corresponding image via image_id
+```powershell
+.venv\Scripts\python -m pip install -r requirements-dev.txt
+.venv\Scripts\python scripts/check.py -q
+```
 
-Convert latitude and longitude fields into GeoJSON Point format
+The suite has **39 tests with 98% backend statement coverage**, using a separate real MongoDB test database. Browser checks cover search, translations, notes, mobile layouts, and error states. GitHub Actions runs the checks on Ubuntu with native MongoDB.
 
-Create a 2dsphere index on the location field to enable geospatial queries
+[Validation details](docs/VALIDATION.md) · [CI runs](https://github.com/muzammilkhan2784/UNESCO-World-Heritage-Explorer/actions)
 
+## Project notes
 
-For entries where an image could not be found on Wikipedia, I used a default placeholder image, which was uploaded once to GridFS and linked to all sites missing an individual image.
+[Architecture](docs/ARCHITECTURE.md) · [API](docs/API.md) · [Operations](docs/OPERATIONS.md) · [Resume bullets and demo walkthrough](docs/CAREER_FAIR.md)
 
-After my initial submission, I found that the dataset was relatively small. To expand its variety and demonstrate multilingual capabilities, I duplicated the dataset and used another Python script to translate key fields (such as the name and description) into six different languages using the Google Translate API. These translated records were stored in a separate collection called sites_translated.
-
-Finally, I merged the original collection and the translated entries into a unified collection named sites_merged, which now powers all multilingual, geospatial, and image-driven features in the final application.
-
-
-Challenges encountered:
-
-No Images in Original Dataset: The dataset did not include any images, so I had to build a separate process to fetch images from Wikipedia and link them to the correct records.
-
-Difficulty Fetching Images: Not all sites had reliable or consistent image results on Wikipedia, which led to gaps that required fallback handling with a default image.
-
-Translation Limitations: Translating multilingual content presented difficulties, including API rate limits, occasional inaccurate translations, and language-specific formatting issues.
-
-Inconsistent Field Structures: Some fields across records were named or formatted inconsistently, requiring cleanup before import.
-
-
-
-
-3. Volume
-
-Here are the results of countDocuments() for my collections:
-
-db.sites_merged.countDocuments()
-5639
-
-db.fs.files.countDocuments()
-876
-
-db.fs.chunks.countDocuments()
-13777
-
-
-
-4.  Variety
-
-Here are some interesting searches that demonstrate variety:
-
-Search for “temple” → Click on "Megalithic Temples of Malta" to view multilingual descriptions and additional site details.
-
-Geospatial Search: Enter coordinates 13.4125, 103.866667 with a radius of 100 km → Returns heritage sites located in Cambodia.
-
-Search for “forest” → Displays natural heritage sites such as tropical rainforests, often with available images.
-
-Language Toggle: Select any site and change the language dropdown → Instantly switches to translated versions while preserving metadata.
-
-Search near Paris: Use coordinates 48.85, 2.35 with a 100 km radius → Filters and returns sites in and around the Paris region.
-
-
-
-5. Bells and Whistles
-
-Some standout features of my app:
-
-a. Geospatial Search: Users can search for sites within a specific radius of a given location using latitude, longitude, and distance.
-
-b. Multilingual Support: Content is displayed in multiple languages based on user selection.
-
-c. GridFS Image Storage: Efficient and scalable way to store images alongside site metadata.
-
-d. User Comments: Users can leave comments on each site page, and they persist across languages.
-
-e. Default Image Handling: Displays a fallback image when no GridFS image is available.
-
-f. Clean & Responsive UI: Styled using custom CSS for clarity and usability across devices.
-
-g. Persistent Search Inputs: Form data is stored in session to retain search values across page refreshes.
-
-
-Secure Access: Database is protected using a MongoDB user account with minimal required permissions.
-
-
-This project combines multilingual content, geospatial logic, and image-based visualization into a single web platform. I'm proud of how smoothly Flask, MongoDB, and GridFS worked together to create a seamless, educational user experience.
+This is an independent portfolio project, not an official UNESCO application. The demo runs locally; public hosting is not configured.

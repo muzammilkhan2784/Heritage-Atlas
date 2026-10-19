@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "axe-core": "4.11.0",
+    "prettier": "3.8.1"
+  },
+  "name": "heritage-atlas-devtools",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write static/css/style.css static/js/explorer.js",
+    "format:check": "prettier --check static/css/style.css static/js/explorer.js"
+  }
+}
