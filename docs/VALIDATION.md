@@ -28,9 +28,9 @@ The browser checks cover map markers, keyword search, result/detail/back navigat
 | Measurement | Observed |
 | --- | ---: |
 | Successful responses | 100 / 100 |
-| Median latency | 12.54 ms |
-| 95th-percentile latency | 36.73 ms |
-| Total sample time | 0.21 seconds |
+| Median latency | 31.18 ms |
+| 95th-percentile latency | 49.96 ms |
+| Total sample time | 0.42 seconds |
 
 This is a short sample on the developer's Windows machine with a local database and warm cache. It is not a production capacity test, availability promise, or externally measured service latency. Numbers vary with hardware and other workloads. The resume kit uses functional and test metrics rather than extrapolating these timings.
 
