@@ -126,3 +126,28 @@ def test_preserved_original_has_no_derived_thumbnail(app, client, photo_catalog)
     assert client.get("/media/site_0001").data == image_path.read_bytes()
     assert client.get("/media/site_0001?size=thumb").data == image_path.read_bytes()
     assert client.get("/media/site_0001").mimetype == "image/jpeg"
+
+
+def test_operator_replacement_clears_old_thumbnail_and_survives_catalog_seed(
+    app, client, photo_catalog
+):
+    repo = app.extensions["repository"]
+    import_catalog(repo, photo_catalog)
+    image_path = photo_catalog.parent / "replacement.jpg"
+    Image.new("RGB", (700, 500), "red").save(image_path, "JPEG")
+    result = app.test_cli_runner().invoke(
+        args=[
+            "import-image",
+            "site_0001",
+            str(image_path),
+            "--credit",
+            "Replacement author",
+            "--source",
+            "https://example.com/new-photo",
+        ]
+    )
+    assert result.exit_code == 0, result.output
+    assert client.get("/media/site_0001?size=thumb").data == image_path.read_bytes()
+    assert import_catalog(repo, photo_catalog) == 0
+    assert client.get("/media/site_0001").data == image_path.read_bytes()
+    assert client.get("/api/sites/site_0001").json["image_credit"] == "Replacement author"

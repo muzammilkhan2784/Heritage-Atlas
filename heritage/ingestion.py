@@ -170,6 +170,21 @@ def register_commands(app):
         )
         repo.sites.update_many(
             {"site_id": site_id},
-            {"$set": {"image_id": image_id, "image_credit": credit, "image_source": source}},
+            {
+                "$set": {
+                    "image_id": image_id,
+                    "image_credit": credit,
+                    "image_source": source,
+                    "image_origin": "operator",
+                },
+                "$unset": {
+                    "image_thumbnail_id": "",
+                    "image_license_url": "",
+                    "image_changes": "",
+                    "image_preserve_original": "",
+                    "image_sha256": "",
+                    "image_unesco_id": "",
+                },
+            },
         )
         click.echo(f"Image linked to {site_id}.")

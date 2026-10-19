@@ -6,12 +6,12 @@
 
 - Engineered a multilingual heritage explorer over **1,155 sites and 5,639 records across seven languages**, with validated data ingestion, a paginated REST API, and interactive geographic discovery.
 - Implemented **MongoDB 2dsphere / `$geoNear` search** with distance-ranked results, composable filters, stable pagination, and GridFS image delivery with cache validation and safe fallbacks.
-- Added **46 automated tests**, native MongoDB/Python setup, GitHub Actions checks, and Chromium coverage of mobile layouts, Arabic content, saved notes, and failure states.
+- Added **47 automated tests**, native MongoDB/Python setup, GitHub Actions checks, and Chromium coverage of mobile layouts, Arabic content, saved notes, and failure states.
 
 Two-bullet alternative for a tight resume:
 
 - Built a Flask/MongoDB heritage atlas supporting **1,155 sites, 5,639 multilingual records, and seven languages**, with GeoJSON radius search, interactive maps, and a paginated REST API.
-- Established validated imports, secure configuration, GridFS media handling, and CI; verified **46 tests** plus desktop/mobile browser checks.
+- Established validated imports, secure configuration, GridFS media handling, and CI; verified **47 tests** plus desktop/mobile browser checks.
 
 Use metrics only while they match the repository's validation results. Describe the collection as a historical snapshot, not the current UNESCO list. The application is tested locally; do not describe it as serving production users or claim a deployed public URL.
 

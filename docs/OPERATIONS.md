@@ -55,7 +55,7 @@ The app does not load `.env` automatically. The native launcher uses it for its 
 
 ## Importing attributed photography
 
-The launcher imports the bundled photo catalog into GridFS automatically. Images and search thumbnails are shared across all translations of a site. File hashes are checked, identical variants are reused on repeated imports, and attribution is stored with both site records and GridFS files. To import the catalog manually:
+The launcher imports the bundled photo catalog into GridFS automatically. Images and search thumbnails are shared across all translations of a site. File hashes are checked, identical variants are reused on repeated imports, custom operator images are retained, and attribution is stored with both site records and GridFS files. To import the catalog manually:
 
 ```sh
 flask --app app:create_app import-photos data/photos/catalog.json

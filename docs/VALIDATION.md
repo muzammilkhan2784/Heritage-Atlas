@@ -4,8 +4,8 @@ Verified locally on Windows with **Python 3.10.11, native MongoDB Community 8.0.
 
 | Check | Result |
 | --- | --- |
-| Automated Python suite against real MongoDB | **46 passed**, no skipped tests |
-| Backend statement coverage | **96.88%** (373 of 385 statements) |
+| Automated Python suite against real MongoDB | **47 passed**, no skipped tests |
+| Backend statement coverage | **96.92%** (378 of 390 statements) |
 | Query-validation module | **100%** statement coverage |
 | Ruff lint and Python formatting | Passed |
 | Prettier CSS/JavaScript formatting | Passed |

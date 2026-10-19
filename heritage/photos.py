@@ -48,7 +48,11 @@ def import_catalog(repo, path):
         (d["metadata"]["asset_sha256"], d["metadata"]["variant"]): d["_id"]
         for d in files.find({"metadata.pipeline": "photos-v1"}, {"metadata": 1})
     }
+    custom_sites = set(repo.sites.distinct("site_id", {"image_origin": "operator"}))
+    linked_count = 0
     for site_id, entry, content in validated:
+        if site_id in custom_sites:
+            continue
         linked = {}
         for variant in ("full", "thumb"):
             if variant == "thumb" and entry.get("preserve_original"):
@@ -109,8 +113,10 @@ def import_catalog(repo, path):
                     "image_unesco_id": entry.get("unesco_id"),
                     "image_changes": entry.get("changes", "Resized and converted to WebP"),
                     "image_preserve_original": bool(entry.get("preserve_original")),
+                    "image_origin": "catalog",
                 }
             },
         )
+        linked_count += 1
     repo._metadata = None
-    return len(validated)
+    return linked_count

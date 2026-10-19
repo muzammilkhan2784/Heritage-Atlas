@@ -45,7 +45,7 @@ Start the app, then run:
 .venv\Scripts\python scripts/check.py -q
 ```
 
-The suite has **46 tests**, using a separate real MongoDB test database. Browser checks cover search, translations, notes, mobile layouts, and error states. GitHub Actions runs the checks on Ubuntu with native MongoDB.
+The suite has **47 tests**, using a separate real MongoDB test database. Browser checks cover search, translations, notes, mobile layouts, and error states. GitHub Actions runs the checks on Ubuntu with native MongoDB.
 
 [Validation details](docs/VALIDATION.md) · [CI runs](https://github.com/muzammilkhan2784/UNESCO-World-Heritage-Explorer/actions)
 
