@@ -1,0 +1,36 @@
+{
+  "records": 5639,
+  "unique_sites": 1155,
+  "languages": {
+    "Arabic": 577,
+    "English": 1155,
+    "French": 576,
+    "German": 1105,
+    "Hindi": 577,
+    "Japanese": 1078,
+    "Spanish": 571
+  },
+  "categories_english": {
+    "Cultural": 898,
+    "Mixed": 39,
+    "Natural": 218
+  },
+  "inscription_year_range": [
+    1978,
+    2021
+  ],
+  "sha256": "fa72b625b21f37549b2d9dd7c4b1baeb5a4af80bb433a7237ecd3ddc81e058be",
+  "source": "Original ISTE 438 coursework MongoDB export; historical Kaggle UNESCO Heritage Sites 2021 snapshot.",
+  "transformations": [
+    "Strip HTML to plain text",
+    "Validate finite WGS84 coordinates",
+    "Normalize field names",
+    "Split multi-region membership and treat source area zeros as missing",
+    "Remove original BSON IDs, comments, and unattributed image links"
+  ],
+  "limitations": [
+    "Historical snapshot, not the current UNESCO list",
+    "Machine translations are incomplete and have not been independently reviewed",
+    "Internal site IDs are not UNESCO inscription IDs"
+  ]
+}

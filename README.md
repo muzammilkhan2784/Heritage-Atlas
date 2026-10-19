@@ -1,123 +1,109 @@
 # UNESCO World Heritage Explorer
-### (MongoDB, Flask, GridFS, GeoJSON, Geospatial Search)
 
-Multilingual search platform enabling users to discover UNESCO World Heritage Sites through keyword, image, and location-based search.
+### Heritage Atlas — extraordinary places, enduring stories.
 
-- Implemented geospatial and regex-based search using MongoDB nearSphere queries and GeoJSON data
-- Integrated GridFS image storage and translated site information into six languages
+[![Quality checks](https://github.com/muzammilkhan2784/UNESCO-World-Heritage-Explorer/actions/workflows/ci.yml/badge.svg)](https://github.com/muzammilkhan2784/UNESCO-World-Heritage-Explorer/actions/workflows/ci.yml)
 
-1.  Technology Stack
+A multilingual heritage atlas built with **Flask, MongoDB, PyMongo, GridFS, and Leaflet**. Search a historical collection of **1,155 sites and 5,639 language records**, explore nearby places using spherical distance, and keep private field notes. Includes a validated dataset, native MongoDB setup, REST endpoints, and tests against real MongoDB.
 
-I used the following stack for my UNESCO World Heritage Sites project:
+![Heritage Atlas desktop interface](docs/images/explorer.png)
 
-Backend
-Flask (Python): For the web framework as it is lightweight, easy to integrate with MongoDB, and allows rapid development.
-MongoDB: A NoSQL database ideal for storing semi-structured UNESCO site data including text, coordinates, and images.
-GridFS: Used to store and retrieve site images efficiently inside MongoDB.
-PyMongo: Python library to interact with MongoDB from Flask.
-MongoDB Authentication: Configured a mongoapp user with readWrite privileges to ensure secure database access.
+## Try it locally
 
-Frontend
-HTML/CSS (with Jinja2 templating): For the frontend interface.
+Requires Python 3.10+ on Windows x64. **Double-click `Start-Demo.cmd`**, or run:
 
-Tools & Utilities 
-VS Code & GitHub Classroom: For code development and collaboration.
-Ubuntu VM on RLES: Deployed and tested in a Linux virtual environment for compatibility.
+```sh
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
+python -m pip install -r requirements.txt
+python scripts/bootstrap.py
+python scripts/install_mongodb.py
+python scripts/run_local.py
+```
 
-I chose this stack because it is lightweight, scalable, integrates well with geospatial queries, and is beginner-friendly for rapid development.
+Open **[localhost:5050](http://localhost:5050)**. The launcher starts native MongoDB with authentication, builds indexes, imports the bundled snapshot, and serves Flask through Waitress. Press Ctrl+C in its terminal to stop. The database persists in `.runtime/data/`. No API keys or containers are required.
 
+The project-local MongoDB installer supports Windows x64 and Ubuntu 24.04 x64, downloads Community 8.0.34 from the official MongoDB distribution, and verifies its SHA-256 checksum. It does not create a system service or change your original coursework database. Other platforms can install MongoDB independently and put `mongod` on PATH. Alternatively, set `MONGO_URI` and `MONGO_DB` to use an existing MongoDB or Atlas database; the launcher then leaves that server under your control.
 
+Keep `.env` private. Generating a new `.env` does not rotate passwords inside an existing database. Repeating the import updates records by `(site_id, language)` without deleting existing data. See [operations](docs/OPERATIONS.md).
 
-2.  Process
+## What it does
 
-I began by sourcing my dataset from Kaggle:
-[ 🔗 UNESCO Heritage Sites 2021 – Kaggle] (https://www.kaggle.com/datasets/ramjasmaurya/unesco-heritage-sites2021/data)
+- **Discover:** literal, case-insensitive keyword search across names and descriptions, combined with category and region filters.
+- **Find nearby:** MongoDB `$geoNear` and a `2dsphere` index return distances in metres and sort the full matching set before pagination. Input uses latitude/longitude; GeoJSON stores **longitude first**.
+- **Explore visually:** map markers match the current results page, link to site details, and let visitors select a search origin. Search and detail pages remain usable when map tiles are unavailable.
+- **Read across languages:** English, Arabic, French, German, Hindi, Japanese, and Spanish. Each detail page lists only the translations available for that site, with language and direction attributes for multilingual text.
+- **Keep field notes:** save and delete notes in browser local storage, shared across translations of the same site. No account, public posting, or server-side storage of notes.
+- **Serve media:** an operator CLI links attributed raster images through GridFS. Media responses include cache validators; missing or unsupported images use a bundled illustration.
+- **Operate predictably:** environment-based database credentials, security headers, bounded database queries, request IDs, liveness/readiness endpoints, and automated checks.
 
-After downloading the dataset, I cleansed it by removing unnecessary columns and standardized formats such as dates and coordinate fields. Once cleaned, the dataset was imported into MongoDB using mongoimport, and stored in a collection named Sites.
-Since the dataset did not include any images, I used a Python script to automatically fetch the actual image files from Wikipedia using the site names. The script queried the Wikipedia API to obtain the primary image for each site, then downloaded the image content and saved it locally using the site's site_id as the filename. These images were stored in a dedicated folder, ready to be uploaded into MongoDB using GridFS.
+## Data, honestly
 
-I then used another Python script to:
+This is the **original ISTE 438 coursework snapshot, with inscription years through 2021**, recovered from the local MongoDB export. It is not a current count of UNESCO sites.
 
-Upload the images to MongoDB using GridFS
+| Language | Records |
+| --- | ---: |
+| English | 1,155 |
+| German | 1,105 |
+| Japanese | 1,078 |
+| Arabic | 577 |
+| Hindi | 577 |
+| French | 576 |
+| Spanish | 571 |
 
-Link each site document to its corresponding image via image_id
+The English records comprise 898 cultural, 218 natural, and 39 mixed sites. Multi-region sites participate in each of the five region filters. The import strips HTML, validates finite coordinates, treats source area zeros as missing, removes old comments and unattributed image links, and rejects duplicate translation keys. A SHA-256 checksum and exact counts live in [data/manifest.json](data/manifest.json).
 
-Convert latitude and longitude fields into GeoJSON Point format
+Translations were machine generated during the original coursework and are **not independently reviewed**. Coverage varies. Internal `site_####` identifiers are not UNESCO inscription IDs. The original multi-gigabyte GridFS image archive is deliberately excluded; the shipped illustrations do not depict individual sites. [Provenance and attribution](docs/DATA_SOURCES.md).
 
-Create a 2dsphere index on the location field to enable geospatial queries
+## API
 
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /api/sites` | Search with `q`, `language`, `category`, `region`, `lat`, `lon`, `radius`, `page`, `per_page` |
+| `GET /api/sites/<site_id>?language=English` | A single translation; 404 when absent |
+| `GET /api/metadata` | Unique sites, translation counts, available languages and regions |
+| `GET /media/<site_id>` | GridFS raster image or illustration redirect |
+| `GET /health/live` | Process liveness, independent of database availability |
+| `GET /health/ready` | Database connection, nonempty dataset, and geospatial index readiness |
 
-For entries where an image could not be found on Wikipedia, I used a default placeholder image, which was uploaded once to GridFS and linked to all sites missing an individual image.
+```sh
+curl "http://localhost:5050/api/sites?q=temple&language=English&per_page=3"
+curl "http://localhost:5050/api/sites?lat=48.85&lon=2.35&radius=100"
+```
 
-After my initial submission, I found that the dataset was relatively small. To expand its variety and demonstrate multilingual capabilities, I duplicated the dataset and used another Python script to translate key fields (such as the name and description) into six different languages using the Google Translate API. These translated records were stored in a separate collection called sites_translated.
+`radius` is in kilometres. All three geographic parameters are required together. Page size is capped at 48; queries have a three-second database execution budget. Errors use 400/404/503 with a JSON `error` object and request ID. All application routes are read-only. See [API details](docs/API.md).
 
-Finally, I merged the original collection and the translated entries into a unified collection named sites_merged, which now powers all multilingual, geospatial, and image-driven features in the final application.
+## Engineering and verification
 
+```sh
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
+python -m pip install -r requirements-dev.txt
+python scripts/check.py -q
+ruff check .
+ruff format --check .
+pip-audit -r requirements.txt
+```
 
-Challenges encountered:
+Run the native demo first. `scripts/check.py` reads the local credentials without printing them and creates a randomly named, isolated test database. It removes only that test database. Alternatively, supply `MONGO_TEST_URI` for your own test instance. Plain `pytest` skips database-dependent tests if this variable is absent.
 
-No Images in Original Dataset: The dataset did not include any images, so I had to build a separate process to fetch images from Wikipedia and link them to the correct records.
+Browser and accessibility checks:
 
-Difficulty Fetching Images: Not all sites had reliable or consistent image results on Wikipedia, which led to gaps that required fallback handling with a default image.
+```sh
+npm ci
+python -m playwright install chromium
+python scripts/browser_check.py
+npm run format:check
+```
 
-Translation Limitations: Translating multilingual content presented difficulties, including API rate limits, occasional inaccurate translations, and language-specific formatting issues.
+The suite covers real geospatial queries (including the international date line), pagination and totals, escaped regex input, translation lookup, import idempotence, image import/streaming/cache validation, safe HTML rendering, database outages, and readiness. Chromium exercises search, back navigation, Arabic content, private notes, empty/error states, mobile layouts, and blocked map tiles. Axe checks selected desktop/mobile pages; automated checks do not constitute a complete accessibility certification.
 
-Inconsistent Field Structures: Some fields across records were named or formatted inconsistently, requiring cleanup before import.
+GitHub Actions runs these checks with native MongoDB 8.0.34 and Python 3.12. [Architecture](docs/ARCHITECTURE.md) · [Validation results](docs/VALIDATION.md) · [Career-fair walkthrough and resume bullets](docs/CAREER_FAIR.md).
 
+## Design decisions and boundaries
 
+Flask renders the interface and the JSON API uses the same validation and repository layer. MongoDB remains the source of truth. There is no frontend build requirement for running the app; npm is used only for development checks. Leaflet 1.9.4 is vendored with its license. OpenStreetMap is the only network dependency used by the browser during normal operation.
 
-
-3. Volume
-
-Here are the results of countDocuments() for my collections:
-
-db.sites_merged.countDocuments()
-5639
-
-db.fs.files.countDocuments()
-876
-
-db.fs.chunks.countDocuments()
-13777
-
-
-
-4.  Variety
-
-Here are some interesting searches that demonstrate variety:
-
-Search for “temple” → Click on "Megalithic Temples of Malta" to view multilingual descriptions and additional site details.
-
-Geospatial Search: Enter coordinates 13.4125, 103.866667 with a radius of 100 km → Returns heritage sites located in Cambodia.
-
-Search for “forest” → Displays natural heritage sites such as tropical rainforests, often with available images.
-
-Language Toggle: Select any site and change the language dropdown → Instantly switches to translated versions while preserving metadata.
-
-Search near Paris: Use coordinates 48.85, 2.35 with a 100 km radius → Filters and returns sites in and around the Paris region.
-
-
-
-5. Bells and Whistles
-
-Some standout features of my app:
-
-a. Geospatial Search: Users can search for sites within a specific radius of a given location using latitude, longitude, and distance.
-
-b. Multilingual Support: Content is displayed in multiple languages based on user selection.
-
-c. GridFS Image Storage: Efficient and scalable way to store images alongside site metadata.
-
-d. User Comments: Users can leave comments on each site page, and they persist across languages.
-
-e. Default Image Handling: Displays a fallback image when no GridFS image is available.
-
-f. Clean & Responsive UI: Styled using custom CSS for clarity and usability across devices.
-
-g. Persistent Search Inputs: Form data is stored in session to retain search values across page refreshes.
-
-
-Secure Access: Database is protected using a MongoDB user account with minimal required permissions.
-
-
-This project combines multilingual content, geospatial logic, and image-based visualization into a single web platform. I'm proud of how smoothly Flask, MongoDB, and GridFS worked together to create a seamless, educational user experience.
+This is a tested portfolio application with a reproducible local deployment. A public production deployment still needs a hosting environment, HTTPS, monitored backups, and traffic controls. There is no public hosted demo or claim of production traffic. Literal substring search scans matching language records; this dataset does not justify claims about performance over millions of documents. See the [deployment notes](docs/OPERATIONS.md) for scaling and operational tradeoffs.
