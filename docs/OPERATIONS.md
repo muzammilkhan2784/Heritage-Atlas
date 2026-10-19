@@ -55,7 +55,13 @@ The app does not load `.env` automatically. The native launcher uses it for its 
 
 ## Importing attributed photography
 
-The historical GridFS dump lacked per-image attribution, so site photography is not bundled. To add an image you have rights to use:
+The launcher imports the bundled photo catalog into GridFS automatically. Images and search thumbnails are shared across all translations of a site. File hashes are checked, identical variants are reused on repeated imports, and attribution is stored with both site records and GridFS files. To import the catalog manually:
+
+```sh
+flask --app app:create_app import-photos data/photos/catalog.json
+```
+
+Two UNESCO originals marked as no-derivatives are served unchanged for both sizes. Other images use a full-size WebP and a smaller result thumbnail. To add another image you have rights to use:
 
 ```sh
 flask --app app:create_app import-image site_0001 path/to/photo.jpg --credit "Author / license" --source "https://source-page.example/photo"
@@ -65,7 +71,7 @@ Run this in an environment with the intended MongoDB URI and database set. The c
 
 ## Backup and migration
 
-Use MongoDB's `mongodump`/`mongorestore` tools or a managed provider's snapshot process. Back up the application database, including `sites`, `fs.files`, and `fs.chunks`, and retain credentials through an appropriate secret manager. The repository snapshot can recreate the historical text data, but it does not back up operator-added images or custom records. Periodically restore a backup into a separate database and verify readiness, counts, translations, and media before relying on it. Never copy live WiredTiger files as a substitute for a supported backup.
+Use MongoDB's `mongodump`/`mongorestore` tools or a managed provider's snapshot process. Back up the application database, including `sites`, `fs.files`, and `fs.chunks`, and retain credentials through an appropriate secret manager. The repository can recreate the historical text and bundled photo collection, but it does not back up operator-added images or custom records. Periodically restore a backup into a separate database and verify readiness, counts, translations, and media before relying on it. Never copy live WiredTiger files as a substitute for a supported backup.
 
 The database import validates the whole input before writing and upserts in batches of 500. It is idempotent by translation key but is not a full-dataset transaction. A failure during a write can leave partial progress; rerun the same import after recovery. It never prunes extra records or translates text at runtime.
 

@@ -106,6 +106,18 @@ def import_records(repo, docs):
 
 
 def register_commands(app):
+    @app.cli.command("import-photos")
+    @click.argument("path", type=click.Path(exists=True, dir_okay=False))
+    def import_photos(path):
+        """Import an attributed photo catalog and result thumbnails into GridFS."""
+        from heritage.photos import import_catalog
+
+        try:
+            count = import_catalog(current_app.extensions["repository"], path)
+        except (ValueError, KeyError, OSError) as exc:
+            raise click.ClickException(f"Photo import failed: {exc}") from exc
+        click.echo(f"Linked {count:,} site photos and thumbnails in GridFS.")
+
     @app.cli.command("init-db")
     def init_db():
         """Create indexes explicitly, outside the web worker startup path."""

@@ -1,6 +1,6 @@
 # UNESCO World Heritage Explorer
 
-A Flask and MongoDB app for browsing UNESCO World Heritage Sites. It started as my ISTE 438 database project at RIT. The updated version adds a reproducible setup, better search, a responsive interface, and automated tests.
+A Flask and MongoDB app for browsing UNESCO World Heritage Sites. It started as my ISTE 438 database project at RIT. The updated version keeps the original blue styling and map layout, with better search, site photos, and automated tests.
 
 ![Search page](docs/images/explorer.png)
 
@@ -10,7 +10,7 @@ A Flask and MongoDB app for browsing UNESCO World Heritage Sites. It started as 
 - Find nearby sites using coordinates and a radius, with results ordered by distance.
 - Browse records in seven languages and see sites on an interactive map.
 - Read site details and save private notes in your browser.
-- Store attributed images in GridFS, with an illustration for missing photos.
+- View images for all 1,155 sites, stored in MongoDB GridFS with source credits.
 - Access the same search through a paginated REST API.
 
 ![Site detail page](docs/images/detail.png)
@@ -32,7 +32,7 @@ The MongoDB installer supports Windows x64 and Ubuntu 24.04 x64. You can also us
 
 ## Data
 
-The original coursework snapshot contains **1,155 sites and 5,639 records across seven languages**, with inscription years through 2021. It is a historical dataset, not the current UNESCO list. Translations are machine generated and coverage varies by site. Site photography is not bundled.
+The original coursework snapshot contains **1,155 sites and 5,639 records across seven languages**, with inscription years through 2021. It is a historical dataset, not the current UNESCO list. Translations are machine generated and coverage varies by site. Site images are bundled and imported into GridFS automatically, including small result thumbnails.
 
 [Data sources and limitations](docs/DATA_SOURCES.md) · [Dataset counts and checksum](data/manifest.json)
 
@@ -45,7 +45,7 @@ Start the app, then run:
 .venv\Scripts\python scripts/check.py -q
 ```
 
-The suite has **39 tests with 98% backend statement coverage**, using a separate real MongoDB test database. Browser checks cover search, translations, notes, mobile layouts, and error states. GitHub Actions runs the checks on Ubuntu with native MongoDB.
+The suite has **46 tests**, using a separate real MongoDB test database. Browser checks cover search, translations, notes, mobile layouts, and error states. GitHub Actions runs the checks on Ubuntu with native MongoDB.
 
 [Validation details](docs/VALIDATION.md) · [CI runs](https://github.com/muzammilkhan2784/UNESCO-World-Heritage-Explorer/actions)
 

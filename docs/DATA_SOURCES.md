@@ -14,9 +14,15 @@ This repository does not assert that third-party descriptions, translated deriva
 
 ## Images
 
-The original local GridFS archive contained 876 file records and roughly 3.5 GB of chunk data. It is not part of this repository and was not altered. The source image-gathering scripts did not preserve adequate author/license metadata for each image. The new import command requires attribution and a source page before attaching additional raster media.
+Every site has a bundled image in `data/photos/`. The original local GridFS archive and 875 saved coursework photos were inspected as references and remain untouched. The new collection uses 1,153 Wikimedia Commons images plus two original UNESCO nomination images. Some natural sites use aerial or satellite photography, and serial heritage properties may show a representative component.
 
-`static/images/compass.svg`, `static/images/landscape.svg`, and the CSS globe/category artwork were created for the application. The landscape is a general illustration, not a photograph or representation of the selected heritage site. The unused legacy UNESCO logo image was removed from the application assets.
+Site associations were established by exact normalized UNESCO names for 1,141 records and reviewed inscription IDs for 14 changed, truncated, or delisted names. Commons files were associated through Wikidata UNESCO inscription identifiers and reviewed component/page matches. `catalog.json` records each file's site ID, official inscription ID, author credit, source, license, changes, dimensions, and SHA-256. `sources.json` and `attribution-overrides.json` retain the collection plan and credits recovered from older source pages.
+
+Commons images are resized to at most 1,200 × 900 and stored as WebP. Search thumbnails are generated in GridFS. Each image retains its own source license; the collection does not apply a new blanket license. The three GFDL-1.2 images include the full license text under `data/photos/licenses/`. Seventeen legacy Commons pages do not name a photographer in their structured metadata or file descriptions; their captions explicitly direct readers to the source page rather than inventing an author.
+
+The images for [Burkina Faso's metallurgy sites](https://whc.unesco.org/en/documents/166675) and the [Yellow Sea bird sanctuaries](https://whc.unesco.org/en/documents/166354) are original JPEG files from the UNESCO nomination records. Their published conditions specify attribution and no derivatives. These two files are retained byte-for-byte, including for thumbnail requests, and are displayed without cropping. The captions include the named author/copyright holder and link to the source and [published terms](https://whc.unesco.org/en/licenses/13).
+
+The old CSS globe and category illustrations were removed when the original blue coursework design was restored. A neutral landscape illustration remains only as a defensive fallback for a missing or deleted media file; all bundled sites have an actual image.
 
 ## Map and frontend libraries
 

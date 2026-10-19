@@ -19,13 +19,14 @@ flowchart LR
 - `heritage/__init__.py`: app factory, routes, errors, headers, request IDs, health checks. No index creation at worker startup.
 - `heritage/validation.py`: query parsing, finite coordinate and radius validation, pagination limits, supported languages/categories.
 - `heritage/repository.py`: persistence, projections, aggregation pipelines, GridFS lookup, and short-lived metadata cache.
+- `heritage/photos.py`: checksum-verified catalog imports, deduplicated full/thumbnail GridFS variants, and preserved originals.
 - `heritage/ingestion.py`: legacy-to-canonical normalization, operator CLI, full-file validation, unique-key upserts.
 - `scripts/prepare_dataset.py`: reproducible BSON conversion to compressed JSON plus integrity manifest.
 - `templates/`, `static/`: responsive server-rendered interface, safe DOM map popups, local field notes, progressively enhanced search.
 
 ## Data model
 
-Each site/translation document has `site_id`, `language`, `name`, plain-text `description`, `year`, `category`, `country`, a display `region`, an array of `regions`, nullable `area_hectares`, and `location: {type: "Point", coordinates: [longitude, latitude]}`. Translation provenance is carried in `translation_note`. Optional image references include attribution and source metadata.
+Each site/translation document has `site_id`, `language`, `name`, plain-text `description`, `year`, `category`, `country`, a display `region`, an array of `regions`, nullable `area_hectares`, and `location: {type: "Point", coordinates: [longitude, latitude]}`. Translation provenance is carried in `translation_note`. Image references link each translation to shared GridFS files, with attribution, source, license, and transformation metadata.
 
 The unique compound `(site_id, language)` index prevents duplicate translations. A `2dsphere` index supports spherical nearby queries. Compound language/name and language/category/name indexes support browsing; substring search also examines descriptions and is not equivalent to full-text indexed search.
 

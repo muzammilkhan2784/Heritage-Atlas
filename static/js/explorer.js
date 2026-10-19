@@ -7,8 +7,8 @@
     document.getElementById("lat").value = Number(lat).toFixed(5);
     document.getElementById("lon").value = Number(lon).toFixed(5);
     document.getElementById("radius").value ||= "100";
-    document.querySelector(".nearby").open = true;
-    status.textContent = "Location set. Choose Explore sites to search nearby.";
+
+    status.textContent = "Location set. Choose Search to search nearby.";
   };
   if (form) {
     try {
@@ -28,8 +28,7 @@
     document.getElementById("clear-location").addEventListener("click", () => {
       for (const id of ["lat", "lon", "radius"])
         document.getElementById(id).value = "";
-      status.textContent =
-        "Location cleared. Choose Explore sites to update results.";
+      status.textContent = "Location cleared. Choose Search to update results.";
     });
     document.getElementById("locate").addEventListener("click", () => {
       if (!navigator.geolocation) {
@@ -47,6 +46,9 @@
         { timeout: 10000, maximumAge: 60000 },
       );
     });
+  }
+  for (const select of document.querySelectorAll(".result-language")) {
+    select.addEventListener("change", () => select.form.requestSubmit());
   }
   const back = document.getElementById("back-to-results");
   if (back) {
@@ -94,7 +96,7 @@
   if (mapElement && mapData && typeof L !== "undefined") {
     const sites = JSON.parse(mapData.textContent);
     const map = L.map(mapElement, { scrollWheelZoom: false }).setView(
-      [24, 15],
+      [25.2, 55.3],
       2,
     );
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {

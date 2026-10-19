@@ -21,6 +21,7 @@ from install_mongodb import binary  # noqa: E402
 
 from heritage import create_app  # noqa: E402
 from heritage.ingestion import import_records, load_records  # noqa: E402
+from heritage.photos import import_catalog  # noqa: E402
 
 
 def main():
@@ -104,6 +105,10 @@ def main():
         app = create_app()
         repo = app.extensions["repository"]
         import_records(repo, load_records(ROOT / "data/heritage.json.gz"))
+        photo_catalog = ROOT / "data/photos/catalog.json"
+        if photo_catalog.exists():
+            count = import_catalog(repo, photo_catalog)
+            print(f"Loaded {count:,} site photos into GridFS.", flush=True)
         print("Heritage Atlas is ready at http://127.0.0.1:5050", flush=True)
         print("Native MongoDB + Python / Waitress. Press Ctrl+C to stop.", flush=True)
         serve(app, host="127.0.0.1", port=5050, threads=8)
