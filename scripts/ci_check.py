@@ -54,6 +54,7 @@ def main():
         for args in [
             ["scripts/check.py", "-q"],
             ["-m", "flask", "--app", "app:create_app", "import-data", "data/heritage.json.gz"],
+            ["-m", "flask", "--app", "app:create_app", "import-photos", "data/photos/catalog.json"],
             ["scripts/browser_check.py", "--start-server"],
         ]:
             subprocess.run([sys.executable, *args], cwd=ROOT, env=env, check=True)

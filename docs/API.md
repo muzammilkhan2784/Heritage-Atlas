@@ -32,7 +32,7 @@ Response shape:
 }
 ```
 
-Each item includes `site_id`, `language`, `name`, `description`, `year`, `category`, `country`, `region`, nullable `area_hectares`, `location`, and `translation_note`. Optional attributed images add `image_credit` and `image_source`. Internal MongoDB `_id` and GridFS IDs are excluded. An out-of-range but syntactically valid page returns an empty list while retaining the full match total.
+Each item includes `site_id`, `language`, `name`, `description`, `year`, `category`, `country`, `region`, nullable `area_hectares`, `location`, and `translation_note`. Optional attributed images add `image_credit` and `image_source`. Image metadata also records license URLs, transformations, and whether the original must be preserved. Internal MongoDB `_id` and GridFS IDs are excluded. An out-of-range but syntactically valid page returns an empty list while retaining the full match total.
 
 ## Single record
 
@@ -59,3 +59,7 @@ Each item includes `site_id`, `language`, `name`, `description`, `year`, `catego
 400 means invalid input, 404 means missing resource/translation, 405 means an unsupported method, and 503 means the database is unavailable or its execution budget was exceeded. The response does not expose a database URI or exception details. The browser renders corresponding readable error pages.
 
 This API has no built-in per-client traffic limiter. Public deployments should apply limits at the ingress layer. Search responses are deliberately bounded, but totals and substring matching are not constant-cost operations.
+
+## Image sizes
+
+`GET /media/<site_id>?size=thumb` serves a small GridFS thumbnail; the default `size=full` serves the detail image. Unsupported sizes return 400. The two preserved UNESCO originals use the same unmodified JPEG for both requests. Each variant has its own ETag where a distinct file exists. A missing thumbnail falls back to the full image, and a missing image uses the defensive illustration.

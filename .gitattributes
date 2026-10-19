@@ -9,3 +9,5 @@
 *.cmd text eol=crlf
 *.gz -text
 *.png -text
+*.webp -text
+*.jpg -text

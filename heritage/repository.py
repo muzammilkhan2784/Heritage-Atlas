@@ -22,6 +22,9 @@ PUBLIC_FIELDS = {
     "translation_note": 1,
     "image_credit": 1,
     "image_source": 1,
+    "image_license_url": 1,
+    "image_changes": 1,
+    "image_preserve_original": 1,
 }
 
 
@@ -94,6 +97,16 @@ class Repository:
     def languages(self, site_id):
         return sorted(self.sites.distinct("language", {"site_id": site_id}, maxTimeMS=3000))
 
+    def languages_for(self, site_ids):
+        rows = self.sites.aggregate(
+            [
+                {"$match": {"site_id": {"$in": site_ids}}},
+                {"$group": {"_id": "$site_id", "languages": {"$addToSet": "$language"}}},
+            ],
+            maxTimeMS=3000,
+        )
+        return {row["_id"]: sorted(row["languages"]) for row in rows}
+
     def metadata(self):
         if self._metadata is None or time.monotonic() - self._cached_at > 60:
             summary = list(
@@ -110,13 +123,23 @@ class Repository:
             self._cached_at = time.monotonic()
         return self._metadata
 
-    def image(self, site_id):
+    def image(self, site_id, thumbnail=False):
         doc = self.sites.find_one(
-            {"site_id": site_id, "image_id": {"$exists": True}}, {"image_id": 1}, max_time_ms=3000
+            {"site_id": site_id, "image_id": {"$exists": True}},
+            {"image_id": 1, "image_thumbnail_id": 1},
+            max_time_ms=3000,
         )
         if not doc:
             return None
         try:
-            return self.fs.get(doc["image_id"])
+            image_id = (
+                doc.get("image_thumbnail_id", doc["image_id"]) if thumbnail else doc["image_id"]
+            )
+            return self.fs.get(image_id)
         except gridfs.NoFile:
+            if thumbnail and doc.get("image_thumbnail_id"):
+                try:
+                    return self.fs.get(doc["image_id"])
+                except gridfs.NoFile:
+                    pass
             return None

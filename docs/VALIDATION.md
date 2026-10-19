@@ -4,9 +4,9 @@ Verified locally on Windows with **Python 3.10.11, native MongoDB Community 8.0.
 
 | Check | Result |
 | --- | --- |
-| Automated Python suite against real MongoDB | **39 passed**, no skipped tests |
-| Backend statement coverage | **98.03%** (299 of 305 statements) |
-| Repository and query-validation modules | **100%** statement coverage |
+| Automated Python suite against real MongoDB | **47 passed**, no skipped tests |
+| Backend statement coverage | **96.92%** (378 of 390 statements) |
+| Query-validation module | **100%** statement coverage |
 | Ruff lint and Python formatting | Passed |
 | Prettier CSS/JavaScript formatting | Passed |
 | Runtime dependency audit | No known vulnerabilities reported by `pip-audit` at verification time |
@@ -17,6 +17,8 @@ Verified locally on Windows with **Python 3.10.11, native MongoDB Community 8.0.
 
 The Python suite exercises actual MongoDB, including geospatial order and totals, antimeridian distance, filter composition, literal regex input, stable pagination, translation lookup, JSON projections, escaped HTML/JSON, image import and GridFS streaming, conditional image requests, missing files, rejected media, idempotent imports, readiness checks, and database outages. Operator commands are tested through Flask's CLI runner. Tests create and remove an isolated randomly named database, not the application database.
 
+The native HTTP media audit returned valid raster images for **all 1,155 sites**, with no illustration fallbacks. The catalog checksum test also verifies that every site has a bundled image with a matching content hash.
+
 The browser checks cover map markers, keyword search, result/detail/back navigation, nearby searches, Arabic content, note persistence across translations, note deletion, empty/error states, responsive widths, and blocked map tiles. The axe cases cover the home page, English detail, Arabic detail, and empty results at 1440px and 390px widths. Manual visual inspection checked desktop and mobile search/detail screenshots. Axe cannot assess every accessibility requirement; its incomplete checks still require human judgment.
 
 ## Small native HTTP timing sample
@@ -26,9 +28,9 @@ The browser checks cover map markers, keyword search, result/detail/back navigat
 | Measurement | Observed |
 | --- | ---: |
 | Successful responses | 100 / 100 |
-| Median latency | 12.54 ms |
-| 95th-percentile latency | 36.73 ms |
-| Total sample time | 0.21 seconds |
+| Median latency | 31.18 ms |
+| 95th-percentile latency | 49.96 ms |
+| Total sample time | 0.42 seconds |
 
 This is a short sample on the developer's Windows machine with a local database and warm cache. It is not a production capacity test, availability promise, or externally measured service latency. Numbers vary with hardware and other workloads. The resume kit uses functional and test metrics rather than extrapolating these timings.
 
@@ -50,4 +52,4 @@ Browser reports/screenshots, the accessibility report, and timing samples are sa
 
 ## Remaining boundaries
 
-The app has no public hosted deployment, reviewed human translations, bundled site photographs, public comments/authentication, centralized observability integration, or evidence of production traffic. Public operation needs the hosting and operational measures described in [OPERATIONS.md](OPERATIONS.md). Data is historical through 2021. These are explicit project boundaries, not features implied by the verification results.
+The app has no public hosted deployment, reviewed human translations, public comments/authentication, centralized observability integration, or evidence of production traffic. Public operation needs the hosting and operational measures described in [OPERATIONS.md](OPERATIONS.md). Data is historical through 2021. These are explicit project boundaries, not features implied by the verification results.

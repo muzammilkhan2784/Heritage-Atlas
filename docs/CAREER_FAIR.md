@@ -6,12 +6,12 @@
 
 - Engineered a multilingual heritage explorer over **1,155 sites and 5,639 records across seven languages**, with validated data ingestion, a paginated REST API, and interactive geographic discovery.
 - Implemented **MongoDB 2dsphere / `$geoNear` search** with distance-ranked results, composable filters, stable pagination, and GridFS image delivery with cache validation and safe fallbacks.
-- Added **39 automated tests with 98% backend coverage**, native MongoDB/Python setup, GitHub Actions checks, and Chromium coverage of mobile layouts, Arabic content, saved notes, and failure states.
+- Added **47 automated tests**, native MongoDB/Python setup, GitHub Actions checks, and Chromium coverage of mobile layouts, Arabic content, saved notes, and failure states.
 
 Two-bullet alternative for a tight resume:
 
 - Built a Flask/MongoDB heritage atlas supporting **1,155 sites, 5,639 multilingual records, and seven languages**, with GeoJSON radius search, interactive maps, and a paginated REST API.
-- Established validated imports, secure configuration, GridFS media handling, and CI; verified **39 tests with 98% backend coverage** plus desktop/mobile browser checks.
+- Established validated imports, secure configuration, GridFS media handling, and CI; verified **47 tests** plus desktop/mobile browser checks.
 
 Use metrics only while they match the repository's validation results. Describe the collection as a historical snapshot, not the current UNESCO list. The application is tested locally; do not describe it as serving production users or claim a deployed public URL.
 
@@ -28,7 +28,7 @@ Use metrics only while they match the repository's validation results. Describe 
 5. Search around **48.85, 2.35**, radius **100 km**. Show distance ordering and map markers. Explain GeoJSON's longitude/latitude order.
 6. Show the GitHub README, architecture diagram, CI result, and a test for crossing the international date line.
 
-If venue internet is unavailable, the native app still serves the dataset, search, illustrations, and detail pages; map tiles may be unavailable. Open the app before leaving and keep the Python terminal running. Keep repository screenshots ready as a second demo option. A recruiter cannot access your `localhost` URL remotely; give them the GitHub repository link.
+If venue internet is unavailable, the native app still serves the dataset, search, site photos, and detail pages; map tiles may be unavailable. Open the app before leaving and keep the Python terminal running. Keep repository screenshots ready as a second demo option. A recruiter cannot access your `localhost` URL remotely; give them the GitHub repository link.
 
 ## Interview points
 
@@ -40,4 +40,4 @@ If venue internet is unavailable, the native app still serves the dataset, searc
 
 **How did you verify reliability?** Tests use an isolated real MongoDB database, validate the seed checksum and counts, repeat imports, verify missing/unsupported images, and exercise database outage responses. Chromium checks primary user flows and responsive widths, and axe checks selected pages for automated accessibility violations.
 
-**What would you improve with more time?** Independently review translations, obtain attributed site photography, refresh and version the upstream dataset, add cursor pagination and indexed multilingual full-text search for a larger collection, then deploy behind HTTPS with traffic limits, backups, and monitoring.
+**What would you improve with more time?** Independently review translations, refresh and version the upstream dataset, add cursor pagination and indexed multilingual full-text search for a larger collection, then deploy behind HTTPS with traffic limits, backups, and monitoring.

@@ -93,6 +93,7 @@ def create_app(config=None):
             result=result,
             metadata=repo.metadata(),
             page_url=page_url,
+            available_languages=repo.languages_for([doc["site_id"] for doc in result["items"]]),
         )
 
     @app.get("/view/<site_id>")
@@ -131,7 +132,10 @@ def create_app(config=None):
 
     @app.get("/media/<site_id>")
     def image(site_id):
-        image = repo.image(site_id)
+        size = request.args.get("size", "full")
+        if size not in {"full", "thumb"}:
+            abort(400, "Image size must be full or thumb.")
+        image = repo.image(site_id, thumbnail=size == "thumb")
         if image is None:
             return redirect(url_for("static", filename="images/landscape.svg"))
         # Only trusted raster images are served; never render imported HTML/SVG.
