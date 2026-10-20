@@ -1,4 +1,4 @@
-# UNESCO World Heritage Explorer
+# Heritage Atlas
 
 A Flask and MongoDB app for browsing UNESCO World Heritage Sites. It started as my ISTE 438 database project at RIT. The updated version keeps the original blue styling and map layout, with better search, site photos, and automated tests.
 
