@@ -1,4 +1,4 @@
-# Running and maintaining Heritage Atlas
+# Running and maintaining UNESCO World Heritage Explorer
 
 ## Local demo
 

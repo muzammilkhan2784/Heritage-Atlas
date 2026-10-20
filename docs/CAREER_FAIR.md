@@ -10,7 +10,7 @@
 
 Two-bullet alternative for a tight resume:
 
-- Built a Flask/MongoDB heritage atlas supporting **1,155 sites, 5,639 multilingual records, and seven languages**, with GeoJSON radius search, interactive maps, and a paginated REST API.
+- Built a Flask/MongoDB heritage explorer supporting **1,155 sites, 5,639 multilingual records, and seven languages**, with GeoJSON radius search, interactive maps, and a paginated REST API.
 - Established validated imports, secure configuration, GridFS media handling, and CI; verified **47 tests** plus desktop/mobile browser checks.
 
 Use metrics only while they match the repository's validation results. Describe the collection as a historical snapshot, not the current UNESCO list. The application is tested locally; do not describe it as serving production users or claim a deployed public URL.

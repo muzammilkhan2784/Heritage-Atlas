@@ -109,11 +109,11 @@ def main():
         if photo_catalog.exists():
             count = import_catalog(repo, photo_catalog)
             print(f"Loaded {count:,} site photos into GridFS.", flush=True)
-        print("Heritage Atlas is ready at http://127.0.0.1:5050", flush=True)
+        print("UNESCO World Heritage Explorer is ready at http://127.0.0.1:5050", flush=True)
         print("Native MongoDB + Python / Waitress. Press Ctrl+C to stop.", flush=True)
         serve(app, host="127.0.0.1", port=5050, threads=8)
     except KeyboardInterrupt:
-        print("Stopping Heritage Atlas.")
+        print("Stopping UNESCO World Heritage Explorer.")
     except PyMongoError as exc:
         # Do not print connection strings or authentication exception details.
         raise SystemExit(

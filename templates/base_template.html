@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Search UNESCO World Heritage Sites by keyword, language, or location.">
   <meta name="theme-color" content="#0056b3">
-  <title>{% block title %}Heritage Atlas — UNESCO World Heritage Sites{% endblock %}</title>
+  <title>{% block title %}UNESCO World Heritage Explorer{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <script defer src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}"></script>
@@ -14,7 +14,7 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header>
-    <h1><a href="{{ url_for('search') }}">Heritage Atlas</a></h1>
+    <h1><a href="{{ url_for('search') }}">UNESCO World Heritage Explorer</a></h1>
     <p>UNESCO World Heritage Sites</p>
   </header>
   <main id="main">{% block content %}{% endblock %}</main>
